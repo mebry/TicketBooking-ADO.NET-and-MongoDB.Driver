@@ -5,6 +5,10 @@ VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking", "Booking\Booking.csproj", "{922D0354-5BEA-4228-AA0D-A779B2946711}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{FC7CA48A-4CE0-4BE6-9655-541C2C1CDC13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking.Domain", "..\Booking.Domain\Booking.Domain.csproj", "{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +19,16 @@ Global
 		{922D0354-5BEA-4228-AA0D-A779B2946711}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{922D0354-5BEA-4228-AA0D-A779B2946711}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{922D0354-5BEA-4228-AA0D-A779B2946711}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772} = {FC7CA48A-4CE0-4BE6-9655-541C2C1CDC13}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {93EAEC3E-097F-499B-8D06-1FDE07E0A94C}
