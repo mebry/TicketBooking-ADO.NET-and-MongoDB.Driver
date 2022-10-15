@@ -9,6 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{FC7CA4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking.Domain", "..\Booking.Domain\Booking.Domain.csproj", "{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DAL", "DAL", "{BDA73F2E-D1B3-4BAD-ADC9-DF8DAE6F393B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking.DAL", "Booking.DAL\Booking.DAL.csproj", "{A0835008-B95D-47B0-9B33-57FD2FFC8E14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +27,17 @@ Global
 		{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0835008-B95D-47B0-9B33-57FD2FFC8E14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0835008-B95D-47B0-9B33-57FD2FFC8E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0835008-B95D-47B0-9B33-57FD2FFC8E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0835008-B95D-47B0-9B33-57FD2FFC8E14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772} = {FC7CA48A-4CE0-4BE6-9655-541C2C1CDC13}
+		{A0835008-B95D-47B0-9B33-57FD2FFC8E14} = {BDA73F2E-D1B3-4BAD-ADC9-DF8DAE6F393B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {93EAEC3E-097F-499B-8D06-1FDE07E0A94C}
