@@ -8,7 +8,7 @@ namespace Booking.Domain.Models
 {
     public class Trip
     {
-        public int TripId { get; set; }
+        public int Id { get; set; }
 
         public string Plane { get; set; }
 

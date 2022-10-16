@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Models
 {
-    public  class TripDetails
+    public class UserRole
     {
         public int Id { get; set; }
 
-        public int TripId { get; set; }
+        public int RoleId { get; set; }
 
-        public int UserId { get; set; }
 
-        public int Place { get; set; }
     }
 }
