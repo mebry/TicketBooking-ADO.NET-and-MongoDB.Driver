@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking", "Booking\Booking.csproj", "{922D0354-5BEA-4228-AA0D-A779B2946711}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Booking", "Booking\Booking.csproj", "{922D0354-5BEA-4228-AA0D-A779B2946711}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{FC7CA48A-4CE0-4BE6-9655-541C2C1CDC13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking.Domain", "..\Booking.Domain\Booking.Domain.csproj", "{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DAL", "DAL", "{BDA73F2E-D1B3-4BAD-ADC9-DF8DAE6F393B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking.DAL", "Booking.DAL\Booking.DAL.csproj", "{A0835008-B95D-47B0-9B33-57FD2FFC8E14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Booking.Domain", "..\Booking.Domain\Booking.Domain.csproj", "{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{9E910379-5064-4236-BF05-6C4C4C01EDA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking.Service", "..\Booking.Service\Booking.Service.csproj", "{85C10CD4-6BE3-4FFE-9533-43C8DAD63AAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Booking.Service", "..\Booking.Service\Booking.Service.csproj", "{85C10CD4-6BE3-4FFE-9533-43C8DAD63AAE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DAL", "DAL", "{D4C30126-0D6C-4613-B4F0-01518A20A277}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking.DAL", "..\Booking.DAL\Booking.DAL.csproj", "{B3641310-FC38-4510-9B62-8BB5422C5A86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,22 +31,22 @@ Global
 		{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A0835008-B95D-47B0-9B33-57FD2FFC8E14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A0835008-B95D-47B0-9B33-57FD2FFC8E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A0835008-B95D-47B0-9B33-57FD2FFC8E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A0835008-B95D-47B0-9B33-57FD2FFC8E14}.Release|Any CPU.Build.0 = Release|Any CPU
 		{85C10CD4-6BE3-4FFE-9533-43C8DAD63AAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{85C10CD4-6BE3-4FFE-9533-43C8DAD63AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85C10CD4-6BE3-4FFE-9533-43C8DAD63AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85C10CD4-6BE3-4FFE-9533-43C8DAD63AAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3641310-FC38-4510-9B62-8BB5422C5A86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3641310-FC38-4510-9B62-8BB5422C5A86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3641310-FC38-4510-9B62-8BB5422C5A86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3641310-FC38-4510-9B62-8BB5422C5A86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{80FE3A4A-117C-4F8D-B4BE-AA96DFF19772} = {FC7CA48A-4CE0-4BE6-9655-541C2C1CDC13}
-		{A0835008-B95D-47B0-9B33-57FD2FFC8E14} = {BDA73F2E-D1B3-4BAD-ADC9-DF8DAE6F393B}
 		{85C10CD4-6BE3-4FFE-9533-43C8DAD63AAE} = {9E910379-5064-4236-BF05-6C4C4C01EDA3}
+		{B3641310-FC38-4510-9B62-8BB5422C5A86} = {D4C30126-0D6C-4613-B4F0-01518A20A277}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {93EAEC3E-097F-499B-8D06-1FDE07E0A94C}
