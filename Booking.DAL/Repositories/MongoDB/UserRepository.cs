@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace Booking.DAL.Repositories.MongoDB
 {
-    public class UserRepository : IBaseRepository<User>
+    public class UserRepository : IUserRepository
     {
-        private readonly IMongoCollection<User> _mongoCollection;
+        private readonly IMongoCollection<BsonDocument> _mongoCollection;
 
         public UserRepository(IMongoClient mongoClient)
         {
@@ -24,17 +24,33 @@ namespace Booking.DAL.Repositories.MongoDB
             }
 
             var mongoDatabase = mongoClient.GetDatabase("booking");
-            _mongoCollection = mongoDatabase.GetCollection<User>("users");
+
+            _mongoCollection = mongoDatabase.GetCollection<BsonDocument>("users");
         }
 
-        public Task<bool> Create(User entity)
+        public async Task<bool> Create(User entity)
         {
-            return null;
+            entity.Id = Service.MaxIndex(_mongoCollection) + 1;
+
+            var document = new BsonDocument
+            {
+                { "_id", entity.Id },
+                {"UserName",entity.UserName },
+                {"Password",entity.Password },
+                {"Codeword",entity.Codeword }
+            };
+
+            await _mongoCollection.InsertOneAsync(document);
+
+            return true;
         }
 
-        public Task<bool> Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            var deleteFilter = Builders<BsonDocument>.Filter.Eq("_id", id);
+            await _mongoCollection.DeleteOneAsync(deleteFilter);
+
+            return true;
         }
 
         public async Task<List<User>> GetAll()
@@ -49,7 +65,13 @@ namespace Booking.DAL.Repositories.MongoDB
                     var user = cursor.Current;
                     foreach (var item in user)
                     {
-                        users.Add(item);
+                        users.Add(new User()
+                        {
+                            Id = item.GetValue("_id").ToInt32(),
+                            UserName = item.GetValue("Username").ToString(),
+                            Password = item.GetValue("Password").ToString(),
+                            Codeword = item.GetValue("Codeword").ToString(),
+                        });
                     }
                 }
             }
@@ -57,9 +79,56 @@ namespace Booking.DAL.Repositories.MongoDB
             return users;
         }
 
-        public Task<User> GetById(int id)
+        public async Task<User> GetById(int id)
         {
-            throw new NotImplementedException();
+            User user = new User();
+
+            var filter = new BsonDocument("_id", id);
+
+            using (var cursor = await _mongoCollection.FindAsync(filter))
+            {
+                if (await cursor.MoveNextAsync())
+                {
+                    if (cursor.Current.Count() == 0)
+                        return null;
+
+                    var elements = cursor.Current.ToList();
+
+                    var item = elements[0];
+
+                    user.Id = item.GetValue("_id").ToInt32();
+                    user.UserName = item.GetValue("UserName").ToString();
+                    user.Password = item.GetValue("Password").ToString();
+                    user.Codeword = item.GetValue("Codeword").ToString();
+
+                }
+            }
+            return user;
+        }
+
+        public async Task<User> GetByUserName(string userName)
+        {
+            User user = new User();
+            var filter = new BsonDocument("UserName", userName);
+
+            using (var cursor = await _mongoCollection.FindAsync(filter))
+            {
+                if (await cursor.MoveNextAsync())
+                {
+                    if (cursor.Current.Count() == 0)
+                        return null;
+
+                    var elements = cursor.Current.ToList();
+                    var item = elements[0];
+
+                    user.Id = item.GetValue("_id").ToInt32();
+                    user.UserName = item.GetValue("UserName").ToString();
+                    user.Password = item.GetValue("Password").ToString();
+                    user.Codeword = item.GetValue("Codeword").ToString();
+                }
+
+            }
+            return user;
         }
 
         public Task<bool> Update(User entity)
@@ -67,15 +136,14 @@ namespace Booking.DAL.Repositories.MongoDB
             throw new NotImplementedException();
         }
 
-        private int MaxIndex()
+        public async Task<bool> UpdatePassword(int userId, string newPassword)
         {
-            var data = _mongoCollection.Find(new BsonDocument()).Sort("{_id:-1}").Limit(1).ToList();
-            if(data!=null && data.Count > 0)
-            {
-                return data[0].Id;
-            }
+            var filter = Builders<BsonDocument>.Filter.Eq("_id", userId);
+            
+            var update = Builders<BsonDocument>.Update.Set("Password", newPassword);
+            await _mongoCollection.UpdateOneAsync(filter, update);
 
-            return 0;
+            return true;
         }
     }
 }
