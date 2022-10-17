@@ -16,12 +16,14 @@ namespace Booking.DAL.Repositories.MongoDB
     {
         private readonly IMongoCollection<BsonDocument> _mongoCollection;
 
-        public UserRepository(IMongoClient mongoClient)
+        public UserRepository(string connectionStrings)
         {
-            if (mongoClient == null)
+            if (connectionStrings == null)
             {
-                throw new ArgumentNullException(nameof(mongoClient));
+                throw new ArgumentNullException(nameof(connectionStrings));
             }
+
+            var mongoClient= new MongoClient(connectionStrings);
 
             var mongoDatabase = mongoClient.GetDatabase("booking");
 
@@ -131,9 +133,19 @@ namespace Booking.DAL.Repositories.MongoDB
             return user;
         }
 
-        public Task<bool> Update(User entity)
+        public async Task<bool> Update(User entity)
         {
-            throw new NotImplementedException();
+            var filter = Builders<BsonDocument>.Filter.Eq("_id", entity.Id);
+
+            var update = Builders<BsonDocument>.Update.Set("UserName", entity.UserName);
+            var update2 = Builders<BsonDocument>.Update.Set("Password", entity.Password);
+            var update3 = Builders<BsonDocument>.Update.Set("Codeword", entity.Codeword);
+
+            await _mongoCollection.UpdateOneAsync(filter, update);
+            await _mongoCollection.UpdateOneAsync(filter, update2);
+            await _mongoCollection.UpdateOneAsync(filter, update3);
+
+            return true;
         }
 
         public async Task<bool> UpdatePassword(int userId, string newPassword)
