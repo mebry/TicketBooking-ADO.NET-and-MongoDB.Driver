@@ -10,11 +10,11 @@ namespace Booking.Domain.Models
     {
         public int Id { get; set; }
 
-        public string Plane { get; set; }
+        public string PlaneId { get; set; }
 
-        public string StartCity { get; set; }
+        public int StartCityId { get; set; }
 
-        public string StartCountry { get; set; }
+        public int EndCityId { get; set; }
 
         public int Capacity { get; set; }
 
@@ -23,9 +23,5 @@ namespace Booking.Domain.Models
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
-
-        public string EndCity { get; set; }
-
-        public string EndCountry { get; set; }
     }
 }
