@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Implementations\" />
-    <Folder Include="Interfaces\" />
+    <ProjectReference Include="..\Booking.DAL\Booking.DAL.csproj" />
+    <ProjectReference Include="..\Booking.Domain\Booking.Domain.csproj" />
   </ItemGroup>
 
 </Project>
