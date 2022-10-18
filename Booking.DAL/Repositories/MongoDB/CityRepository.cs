@@ -33,25 +33,24 @@ namespace Booking.DAL.Repositories.MongoDB
 
             var pipeline2 = new BsonDocument
             {
-                {"$match", new BsonDocument{
-                    {"_id", entity.CountryId }
-                }}
-            };
-
-            var pipeline3 = new BsonDocument
-            {
                 { "$project", new BsonDocument
                     {
                     { "_id", "$_id"},
                     { "CityId", "$Cities._id"}
                 } }
             };
-            BsonDocument[] pipelines = new BsonDocument[] { pipeline, pipeline2, pipeline3 };
+            BsonDocument[] pipelines = new BsonDocument[] { pipeline, pipeline2 };
             List<BsonDocument> results = await _mongoCollection.Aggregate<BsonDocument>(pipelines).ToListAsync();
 
             List<City> cities = new();
+            List<int> arr = new List<int>();
+            foreach (var item in results)
+            {
+                arr.Add(item.GetValue("CityId").ToInt32());
+            }
 
-            entity.Id = results.Last().GetValue("CityId").ToInt32()+1;
+            entity.Id = arr.Max() + 1;
+
 
             var filter = Builders<BsonDocument>.Filter.Eq("_id", entity.CountryId);
             BsonDocument bsonElements = new BsonDocument()
@@ -72,15 +71,77 @@ namespace Booking.DAL.Repositories.MongoDB
             return true;
         }
 
-        public Task<List<City>> GetAll()
+        public async Task<List<City>> GetAll()
         {
-            throw new NotImplementedException();
+            var pipeline = new BsonDocument
+            {
+                {"$unwind", "$Cities"}
+            };
+
+            var pipeline2 = new BsonDocument
+            {
+                { "$project", new BsonDocument
+                    {
+                    { "_id", "$_id"},
+                    { "CityName", "$Cities.CityName"},
+                    { "CityId", "$Cities._id"}
+                } }
+            };
+            BsonDocument[] pipelines = new BsonDocument[] { pipeline, pipeline2 };
+            List<BsonDocument> results = await _mongoCollection.Aggregate<BsonDocument>(pipelines).ToListAsync();
+
+            List<City> cities = new();
+
+            foreach (BsonDocument item in results)
+            {
+                cities.Add(new City()
+                {
+                    Name = item.GetValue("CityName").ToString(),
+                    Id = item.GetValue("CityId").ToInt32(),
+                    CountryId = item.GetValue("_id").ToInt32()
+                });
+            }
+
+            return cities;
         }
 
-        public Task<City> GetById(int id)
+        public async Task<City> GetById(int id)
         {
-            
-            throw new NotImplementedException();
+            var pipeline = new BsonDocument
+            {
+                {"$unwind", "$Cities"}
+            };
+
+            var pipeline2 = new BsonDocument
+            {
+                {"$match", new BsonDocument{
+                    {"Cities._id", id }
+
+                }}
+            };
+
+            var pipeline3 = new BsonDocument
+            {
+                { "$project", new BsonDocument
+                    {
+                    { "_id", "$_id"},
+                    { "CityName", "$Cities.CityName"},
+                    { "CityId", "$Cities._id"}
+                } }
+            };
+            BsonDocument[] pipelines = new BsonDocument[] { pipeline, pipeline2, pipeline3 };
+            List<BsonDocument> results = await _mongoCollection.Aggregate<BsonDocument>(pipelines).ToListAsync();
+
+            City city = new City();
+
+            foreach (BsonDocument item in results)
+            {
+                city.Name = item.GetValue("CityName").ToString();
+                city.Id = item.GetValue("CityId").ToInt32();
+                city.CountryId = item.GetValue("_id").ToInt32();
+            }
+
+            return city;
         }
 
         public Task<Country> GetByName(string name)
