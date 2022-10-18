@@ -42,14 +42,20 @@ namespace Booking.DAL.Repositories.MongoDB
             BsonDocument[] pipelines = new BsonDocument[] { pipeline, pipeline2 };
             List<BsonDocument> results = await _mongoCollection.Aggregate<BsonDocument>(pipelines).ToListAsync();
 
-            List<City> cities = new();
             List<int> arr = new List<int>();
             foreach (var item in results)
             {
                 arr.Add(item.GetValue("CityId").ToInt32());
             }
 
-            entity.Id = arr.Max() + 1;
+            if (arr.Count > 0)
+            {
+                entity.Id = arr.Max() + 1;
+            }
+            else
+            {
+                entity.Id = 1;
+            }
 
             var filter = Builders<BsonDocument>.Filter.Eq("_id", entity.CountryId);
             BsonDocument bsonElements = new BsonDocument()
