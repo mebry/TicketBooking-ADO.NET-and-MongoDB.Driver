@@ -11,5 +11,9 @@ namespace Booking.Domain.Models
         public int Id { get; set; }
 
         public int UserId { get; set; }
+
+        public DateTime DateTime { get; set; }
+
+        public string Reason { get; set; }
     }
 }
