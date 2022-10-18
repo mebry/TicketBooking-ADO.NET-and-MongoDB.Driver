@@ -36,9 +36,9 @@ namespace Booking.DAL.Repositories.MongoDB
             var update2 = Builders<BsonDocument>.Update.Unset("LastName");
             var update3 = Builders<BsonDocument>.Update.Unset("Patronymic");
 
-            await _mongoCollection.FindOneAndUpdateAsync(filter, update);
-            await _mongoCollection.FindOneAndUpdateAsync(filter, update2);
-            await _mongoCollection.FindOneAndUpdateAsync(filter, update3);
+            await _mongoCollection.UpdateOneAsync(filter, update);
+            await _mongoCollection.UpdateOneAsync(filter, update2);
+            await _mongoCollection.UpdateOneAsync(filter, update3);
 
             return true;
         }
@@ -85,12 +85,21 @@ namespace Booking.DAL.Repositories.MongoDB
                     var elements = cursor.Current.ToList();
 
                     var item = elements[0];
-
-                    user.UserId = item.GetValue("_id").ToInt32();
-                    user.FirstName = item.GetValue("FirstName").ToString();
-                    user.LastName = item.GetValue("LastName").ToString();
-                    user.Patronymic = item.GetValue("Patronymic").ToString();
-
+                    foreach (var data in item)
+                    {
+                        if(data.Name == "FirstName")
+                        {
+                            user.FirstName = data.Value.ToString();
+                        }
+                        if (data.Name == "LastName")
+                        {
+                            user.LastName = data.Value.ToString();
+                        }
+                        if (data.Name == "Patronymic")
+                        {
+                            user.Patronymic = data.Value.ToString();
+                        }
+                    }
                 }
             }
             return user;
