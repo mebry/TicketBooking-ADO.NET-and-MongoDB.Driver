@@ -8,8 +8,6 @@ namespace Booking.Domain.Models
 {
     public class UserDelails
     {
-        public int Id { get; set; }
-
         public int UserId { get; set; }
 
         public string FirstName { get; set; }
@@ -17,7 +15,5 @@ namespace Booking.Domain.Models
         public string LastName { get; set; }
 
         public string Patronymic { get; set; }
-
-        public DateTime CreatedDate { get; set; }
     }
 }
