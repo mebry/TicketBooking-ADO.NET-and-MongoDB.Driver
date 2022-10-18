@@ -1,39 +1,119 @@
-﻿using Booking.DAL.Interfaces;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
+using Booking.DAL.Interfaces;
 using Booking.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Booking.DAL.Repositories.MongoDB
 {
     public class UserDelailsRepository : IBaseRepository<UserDelails>
     {
-        
-        public Task<bool> Create(UserDelails entity)
+        private readonly IMongoCollection<BsonDocument> _mongoCollection;
+
+        public UserDelailsRepository(string connectionStrings)
         {
-            throw new NotImplementedException();
+            if (connectionStrings == null)
+            {
+                throw new ArgumentNullException(nameof(connectionStrings));
+            }
+
+            var mongoClient = new MongoClient(connectionStrings);
+
+            var mongoDatabase = mongoClient.GetDatabase("booking");
+
+            _mongoCollection = mongoDatabase.GetCollection<BsonDocument>("users");
         }
 
-        public Task<bool> Delete(int id)
+        public async Task<bool> Create(UserDelails entity)
         {
-            throw new NotImplementedException();
+            await ChangeTheDocument(entity);
+            return true;
         }
 
-        public Task<List<UserDelails>> GetAll()
+        public async Task<bool> Delete(int userId)
         {
-            throw new NotImplementedException();
+            var filter = new BsonDocument("_id", userId);
+            var update = Builders<BsonDocument>.Update.Unset("FirstName");
+            var update2 = Builders<BsonDocument>.Update.Unset("LastName");
+            var update3 = Builders<BsonDocument>.Update.Unset("Patronymic");
+
+            await _mongoCollection.FindOneAndUpdateAsync(filter, update);
+            await _mongoCollection.FindOneAndUpdateAsync(filter, update2);
+            await _mongoCollection.FindOneAndUpdateAsync(filter, update3);
+
+            return true;
         }
 
-        public Task<UserDelails> GetById(int id)
+        public async Task<List<UserDelails>> GetAll()
         {
-            throw new NotImplementedException();
+            var filter = new BsonDocument();
+            var users = new List<UserDelails>();
+
+            using (var cursor = await _mongoCollection.FindAsync(filter))
+            {
+                while (await cursor.MoveNextAsync())
+                {
+                    var user = cursor.Current;
+                    foreach (var item in user)
+                    {
+                        users.Add(new UserDelails()
+                        {
+                            UserId = item.GetValue("_id").ToInt32(),
+                            FirstName = item.GetValue("FirstName").ToString(),
+                            LastName = item.GetValue("LastName").ToString(),
+                            Patronymic = item.GetValue("Patronymic").ToString(),
+                        });
+                    }
+                }
+            }
+
+            return users;
         }
 
-        public Task<bool> Update(UserDelails entity)
+        public async Task<UserDelails> GetById(int userId)
         {
-            throw new NotImplementedException();
+            UserDelails user = new UserDelails();
+
+            var filter = new BsonDocument("_id", userId);
+
+            using (var cursor = await _mongoCollection.FindAsync(filter))
+            {
+                if (await cursor.MoveNextAsync())
+                {
+                    if (cursor.Current.Count() == 0)
+                        return null;
+
+                    var elements = cursor.Current.ToList();
+
+                    var item = elements[0];
+
+                    user.UserId = item.GetValue("_id").ToInt32();
+                    user.FirstName = item.GetValue("FirstName").ToString();
+                    user.LastName = item.GetValue("LastName").ToString();
+                    user.Patronymic = item.GetValue("Patronymic").ToString();
+
+                }
+            }
+            return user;
         }
+
+        public async Task<bool> Update(UserDelails entity)
+        {
+            await ChangeTheDocument(entity);
+            return true;
+        }
+
+        private async Task ChangeTheDocument(UserDelails entity)
+        {
+            var filter = Builders<BsonDocument>.Filter.Eq("_id", entity.UserId);
+
+            var update = Builders<BsonDocument>.Update.Set("FirstName", entity.FirstName);
+            var update2 = Builders<BsonDocument>.Update.Set("LastName", entity.LastName);
+            var update3 = Builders<BsonDocument>.Update.Set("Patronymic", entity.Patronymic);
+
+            await _mongoCollection.UpdateOneAsync(filter, update);
+            await _mongoCollection.UpdateOneAsync(filter, update2);
+            await _mongoCollection.UpdateOneAsync(filter, update3);
+        }
+    
     }
 }
