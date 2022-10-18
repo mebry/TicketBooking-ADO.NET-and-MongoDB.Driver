@@ -10,7 +10,7 @@ namespace Booking.Domain.Models
     {
         public int Id { get; set; }
 
-        public string PlaneId { get; set; }
+        public int PlaneId { get; set; }
 
         public int StartCityId { get; set; }
 
