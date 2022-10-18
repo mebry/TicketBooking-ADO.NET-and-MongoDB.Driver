@@ -18,6 +18,7 @@ namespace Booking.Domain.Enums
         CitynotFound,
         CountryNotFound,
         OK = 200,
+        DataAlreadyExists=300,
         InternalServerError = 500,
     }
 }
