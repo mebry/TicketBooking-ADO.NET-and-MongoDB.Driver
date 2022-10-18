@@ -51,7 +51,6 @@ namespace Booking.DAL.Repositories.MongoDB
 
             entity.Id = arr.Max() + 1;
 
-
             var filter = Builders<BsonDocument>.Filter.Eq("_id", entity.CountryId);
             BsonDocument bsonElements = new BsonDocument()
             {
@@ -67,6 +66,15 @@ namespace Booking.DAL.Repositories.MongoDB
 
         public async Task<bool> Delete(int id)
         {
+            var data = await GetById(id);
+
+            if (data == null)
+                return false;
+
+            var filter = new BsonDocument("_id", data.CountryId);
+            var update = Builders<BsonDocument>.Update.Pull("Cities",
+                new BsonDocument() { { "_id", id } });
+            await _mongoCollection.FindOneAndUpdateAsync(filter, update);
 
             return true;
         }
@@ -193,11 +201,15 @@ namespace Booking.DAL.Repositories.MongoDB
             return city;
         }
 
-        public Task<bool> Update(City entity)
+        public async Task<bool> Update(City entity)
         {
-            var arrayFilter = Builders<BsonDocument>.Filter.Eq("student_id", 10000) & Builders<BsonDocument>
-                  .Filter.Eq("scores.type", "quiz");
-            throw new NotImplementedException();
+            var arrayFilter = Builders<BsonDocument>.Filter.Eq("_id", entity.CountryId) & Builders<BsonDocument>
+                  .Filter.Eq("Cities._id", entity.Id);
+
+            var arrayUpdate = Builders<BsonDocument>.Update.Set("Cities.$.CityName", entity.Name);
+            _mongoCollection.UpdateOne(arrayFilter, arrayUpdate);
+
+            return true;
         }
     }
 }
