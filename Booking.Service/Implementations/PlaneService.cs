@@ -99,7 +99,7 @@ namespace Booking.Service.Implementations
                 return new BaseResponse<List<Plane>>()
                 {
                     Data = planes,
-                    Description = "The plane was successfully added.",
+                    Description = "Data received successfully",
                     StatusCode = StatusCode.OK
                 };
             }
@@ -119,6 +119,39 @@ namespace Booking.Service.Implementations
             try
             {
                 var plane = await _planeRepository.GetById(id);
+                if (plane == null)
+                {
+                    return new BaseResponse<Plane>()
+                    {
+                        Data = null,
+                        StatusCode = StatusCode.DataAlreadyExists,
+                        Description = "A plane with this id doesn't exist"
+                    };
+                }
+
+                return new BaseResponse<Plane>()
+                {
+                    Data = plane,
+                    Description = "The plane was successfully found.",
+                    StatusCode = StatusCode.OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponse<Plane>()
+                {
+                    Data = null,
+                    Description = ex.Message,
+                    StatusCode = StatusCode.InternalServerError
+                };
+            }
+        }
+
+        public async Task<BaseResponse<Plane>> GetByName(string planeName)
+        {
+            try
+            {
+                var plane = await _planeRepository.GetByPlaneName(planeName);
                 if (plane == null)
                 {
                     return new BaseResponse<Plane>()
