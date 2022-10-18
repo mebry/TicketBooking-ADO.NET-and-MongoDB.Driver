@@ -20,9 +20,9 @@ namespace Booking.Service.Implementations
             try
             {
 
-                var plane = await _roleRepository.GetByName(model.Name);
+                var role = await _roleRepository.GetByName(model.Name);
 
-                if (plane != null)
+                if (role != null)
                 {
                     return new BaseResponse<bool>()
                     {
@@ -56,9 +56,9 @@ namespace Booking.Service.Implementations
         {
             try
             {
-                var plane = await _roleRepository.GetById(id);
+                var role = await _roleRepository.GetById(id);
 
-                if (plane == null)
+                if (role == null)
                 {
                     return new BaseResponse<bool>()
                     {
@@ -149,8 +149,8 @@ namespace Booking.Service.Implementations
         {
             try
             {
-                var plane = await _roleRepository.GetByName(name);
-                if (plane == null)
+                var role = await _roleRepository.GetByName(name);
+                if (role == null)
                 {
                     return new BaseResponse<Role>()
                     {
@@ -162,7 +162,7 @@ namespace Booking.Service.Implementations
 
                 return new BaseResponse<Role>()
                 {
-                    Data = plane,
+                    Data = role,
                     Description = "The role was successfully found.",
                     StatusCode = StatusCode.OK
                 };
