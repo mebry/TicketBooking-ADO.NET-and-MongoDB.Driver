@@ -62,7 +62,7 @@ namespace Booking.Service.Implementations
                     return new BaseResponse<bool>()
                     {
                         Data = false,
-                        StatusCode = StatusCode.DataAlreadyExists,
+                        StatusCode = StatusCode.CountryNotFound,
                         Description = "A country with this id doesn't exist"
                     };
                 }
@@ -157,7 +157,7 @@ namespace Booking.Service.Implementations
                     return new BaseResponse<Country>()
                     {
                         Data = null,
-                        StatusCode = StatusCode.DataAlreadyExists,
+                        StatusCode = StatusCode.CountryNotFound,
                         Description = "A country with this id doesn't exist"
                     };
                 }
@@ -190,7 +190,7 @@ namespace Booking.Service.Implementations
                     return new BaseResponse<Country>()
                     {
                         Data = null,
-                        StatusCode = StatusCode.DataAlreadyExists,
+                        StatusCode = StatusCode.CountryNotFound,
                         Description = "A country with this id doesn't exist"
                     };
                 }
@@ -217,6 +217,18 @@ namespace Booking.Service.Implementations
         {
             try
             {
+                var data = _countryRepository.GetById(model.Id);
+
+                if (data == null)
+                {
+                    return new BaseResponse<bool>()
+                    {
+                        Data = false,
+                        StatusCode = StatusCode.CountryNotFound,
+                        Description = "A country with this id doesn't exist"
+                    };
+                }
+
                 await _countryRepository.Update(model);
 
                 return new BaseResponse<bool>()

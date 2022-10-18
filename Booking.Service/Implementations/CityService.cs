@@ -62,7 +62,7 @@ namespace Booking.Service.Implementations
                     return new BaseResponse<bool>()
                     {
                         Data = false,
-                        StatusCode = StatusCode.DataAlreadyExists,
+                        StatusCode = StatusCode.CityNotFound,
                         Description = "A city with this id doesn't exist"
                     };
                 }
@@ -121,7 +121,7 @@ namespace Booking.Service.Implementations
                     return new BaseResponse<City>()
                     {
                         Data = null,
-                        StatusCode = StatusCode.DataAlreadyExists,
+                        StatusCode = StatusCode.CityNotFound,
                         Description = "A city with this id doesn't exist"
                     };
                 }
@@ -148,20 +148,20 @@ namespace Booking.Service.Implementations
         {
             try
             {
-                var plane = await _cityRepository.GetById(id);
-                if (plane == null)
+                var city = await _cityRepository.GetById(id);
+                if (city == null)
                 {
                     return new BaseResponse<City>()
                     {
                         Data = null,
-                        StatusCode = StatusCode.DataAlreadyExists,
+                        StatusCode = StatusCode.CityNotFound,
                         Description = "A city with this id doesn't exist"
                     };
                 }
 
                 return new BaseResponse<City>()
                 {
-                    Data = plane,
+                    Data = city,
                     Description = "The city was successfully found.",
                     StatusCode = StatusCode.OK
                 };
@@ -181,6 +181,18 @@ namespace Booking.Service.Implementations
         {
             try
             {
+                var data = _cityRepository.GetById(model.Id);
+
+                if (data == null)
+                {
+                    return new BaseResponse<bool>()
+                    {
+                        Data = false,
+                        StatusCode = StatusCode.CityNotFound,
+                        Description = "A city with this id doesn't exist"
+                    };
+                }
+
                 await _cityRepository.Update(model);
 
                 return new BaseResponse<bool>()

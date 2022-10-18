@@ -15,7 +15,7 @@ namespace Booking.Domain.Enums
         RoleNotFound,
         PlaneNotFound,
         TripNotFound,
-        CitynotFound,
+        CityNotFound,
         CountryNotFound,
         OK = 200,
         DataAlreadyExists=300,

@@ -63,7 +63,7 @@ namespace Booking.Service.Implementations
                     return new BaseResponse<bool>()
                     {
                         Data = false,
-                        StatusCode = StatusCode.DataAlreadyExists,
+                        StatusCode = StatusCode.RoleNotFound,
                         Description = "A role with this id doesn't exist"
                     };
                 }
@@ -116,20 +116,20 @@ namespace Booking.Service.Implementations
         {
             try
             {
-                var plane = await _roleRepository.GetById(id);
-                if (plane == null)
+                var role = await _roleRepository.GetById(id);
+                if (role == null)
                 {
                     return new BaseResponse<Role>()
                     {
                         Data = null,
-                        StatusCode = StatusCode.DataAlreadyExists,
+                        StatusCode = StatusCode.RoleNotFound,
                         Description = "A role with this id doesn't exist"
                     };
                 }
 
                 return new BaseResponse<Role>()
                 {
-                    Data = plane,
+                    Data = role,
                     Description = "The role was successfully found.",
                     StatusCode = StatusCode.OK
                 };
@@ -155,7 +155,7 @@ namespace Booking.Service.Implementations
                     return new BaseResponse<Role>()
                     {
                         Data = null,
-                        StatusCode = StatusCode.DataAlreadyExists,
+                        StatusCode = StatusCode.RoleNotFound,
                         Description = "A role with this id doesn't exist"
                     };
                 }
@@ -182,6 +182,18 @@ namespace Booking.Service.Implementations
         {
             try
             {
+                var data = _roleRepository.GetById(model.Id);
+
+                if (data == null)
+                {
+                    return new BaseResponse<bool>()
+                    {
+                        Data = false,
+                        StatusCode = StatusCode.RoleNotFound,
+                        Description = "A role with this id doesn't exist"
+                    };
+                }
+
                 await _roleRepository.Update(model);
 
                 return new BaseResponse<bool>()

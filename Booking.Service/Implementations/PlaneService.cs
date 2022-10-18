@@ -65,7 +65,7 @@ namespace Booking.Service.Implementations
                     return new BaseResponse<bool>()
                     {
                         Data = false,
-                        StatusCode = StatusCode.DataAlreadyExists,
+                        StatusCode = StatusCode.PlaneNotFound,
                         Description = "A plane with this id doesn't exist"
                     };
                 }
@@ -124,7 +124,7 @@ namespace Booking.Service.Implementations
                     return new BaseResponse<Plane>()
                     {
                         Data = null,
-                        StatusCode = StatusCode.DataAlreadyExists,
+                        StatusCode = StatusCode.PlaneNotFound,
                         Description = "A plane with this id doesn't exist"
                     };
                 }
@@ -157,7 +157,7 @@ namespace Booking.Service.Implementations
                     return new BaseResponse<Plane>()
                     {
                         Data = null,
-                        StatusCode = StatusCode.DataAlreadyExists,
+                        StatusCode = StatusCode.PlaneNotFound,
                         Description = "A plane with this id doesn't exist"
                     };
                 }
@@ -184,6 +184,18 @@ namespace Booking.Service.Implementations
         {
             try
             {
+                var data = _planeRepository.GetById(model.Id);
+
+                if (data == null)
+                {
+                    return new BaseResponse<bool>()
+                    {
+                        Data = false,
+                        StatusCode = StatusCode.PlaneNotFound,
+                        Description = "A plane with this id doesn't exist"
+                    };
+                }
+
                 await _planeRepository.Update(model);
 
                 return new BaseResponse<bool>()
