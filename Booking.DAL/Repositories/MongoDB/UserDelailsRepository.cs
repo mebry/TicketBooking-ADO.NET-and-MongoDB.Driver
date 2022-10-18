@@ -5,7 +5,7 @@ using Booking.Domain.Models;
 
 namespace Booking.DAL.Repositories.MongoDB
 {
-    public class UserDelailsRepository : IBaseRepository<UserDelails>
+    public class UserDelailsRepository : IUserDetailsRepository
     {
         private readonly IMongoCollection<BsonDocument> _mongoCollection;
 
@@ -96,9 +96,63 @@ namespace Booking.DAL.Repositories.MongoDB
             return user;
         }
 
+        public async Task<UserDelails> GetByUserName(string userName)
+        {
+            UserDelails user = new UserDelails();
+
+            var filter = new BsonDocument("UserName", userName);
+
+            using (var cursor = await _mongoCollection.FindAsync(filter))
+            {
+                if (await cursor.MoveNextAsync())
+                {
+                    if (cursor.Current.Count() == 0)
+                        return null;
+
+                    var elements = cursor.Current.ToList();
+
+                    var item = elements[0];
+
+                    user.UserId = item.GetValue("_id").ToInt32();
+                    user.FirstName = item.GetValue("FirstName").ToString();
+                    user.LastName = item.GetValue("LastName").ToString();
+                    user.Patronymic = item.GetValue("Patronymic").ToString();
+
+                }
+            }
+            return user;
+        }
+
         public async Task<bool> Update(UserDelails entity)
         {
             await ChangeTheDocument(entity);
+            return true;
+        }
+
+        public async Task<bool> UpdateFirstName(int userId, string firstName)
+        {
+            var filter = Builders<BsonDocument>.Filter.Eq("_id", userId);
+            var update = Builders<BsonDocument>.Update.Set("FirstName", firstName);
+            await _mongoCollection.UpdateOneAsync(filter, update);
+
+            return true;
+        }
+
+        public async Task<bool> UpdateLastName(int userId, string lastName)
+        {
+            var filter = Builders<BsonDocument>.Filter.Eq("_id", userId);
+            var update = Builders<BsonDocument>.Update.Set("LastName", lastName);
+            await _mongoCollection.UpdateOneAsync(filter, update);
+
+            return true;
+        }
+
+        public async Task<bool> UpdatePatronymic(int userId, string patronymic)
+        {
+
+            var filter = Builders<BsonDocument>.Filter.Eq("_id", userId);
+            var update = Builders<BsonDocument>.Update.Set("Patronymic", patronymic);
+            await _mongoCollection.UpdateOneAsync(filter, update);
             return true;
         }
 
@@ -114,6 +168,6 @@ namespace Booking.DAL.Repositories.MongoDB
             await _mongoCollection.UpdateOneAsync(filter, update2);
             await _mongoCollection.UpdateOneAsync(filter, update3);
         }
-    
+
     }
 }
