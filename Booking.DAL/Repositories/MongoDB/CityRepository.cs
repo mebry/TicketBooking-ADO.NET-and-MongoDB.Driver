@@ -134,19 +134,63 @@ namespace Booking.DAL.Repositories.MongoDB
 
             City city = new City();
 
-            foreach (BsonDocument item in results)
+            if (results.Count == 0)
             {
-                city.Name = item.GetValue("CityName").ToString();
-                city.Id = item.GetValue("CityId").ToInt32();
-                city.CountryId = item.GetValue("_id").ToInt32();
+                return null;
             }
+
+            var item = results[0];
+
+            city.Name = item.GetValue("CityName").ToString();
+            city.Id = item.GetValue("CityId").ToInt32();
+            city.CountryId = item.GetValue("_id").ToInt32();
+
 
             return city;
         }
 
-        public Task<Country> GetByName(string name)
+        public async Task<City> GetByName(string name)
         {
-            throw new NotImplementedException();
+            var pipeline = new BsonDocument
+            {
+                {"$unwind", "$Cities"}
+            };
+
+            var pipeline2 = new BsonDocument
+            {
+                {"$match", new BsonDocument{
+                    {"Cities.Cityname", name }
+
+                }}
+            };
+
+            var pipeline3 = new BsonDocument
+            {
+                { "$project", new BsonDocument
+                    {
+                    { "_id", "$_id"},
+                    { "CityName", "$Cities.CityName"},
+                    { "CityId", "$Cities._id"}
+                } }
+            };
+            BsonDocument[] pipelines = new BsonDocument[] { pipeline, pipeline2, pipeline3 };
+            List<BsonDocument> results = await _mongoCollection.Aggregate<BsonDocument>(pipelines).ToListAsync();
+
+            City city = new City();
+
+            if (results.Count == 0)
+            {
+                return null;
+            }
+
+            var item = results[0];
+
+            city.Name = item.GetValue("CityName").ToString();
+            city.Id = item.GetValue("CityId").ToInt32();
+            city.CountryId = item.GetValue("_id").ToInt32();
+
+
+            return city;
         }
 
         public Task<bool> Update(City entity)
