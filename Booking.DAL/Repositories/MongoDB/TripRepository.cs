@@ -26,7 +26,7 @@ namespace Booking.DAL.Repositories.MongoDB
             var mongoClient = new MongoClient(connectionStrings);
             var mongoDatabase = mongoClient.GetDatabase("booking");
 
-            _mongoCollection = mongoDatabase.GetCollection<BsonDocument>("countries");
+            _mongoCollection = mongoDatabase.GetCollection<BsonDocument>("trips");
         }
 
         public async Task<bool> Create(Trip entity)
@@ -36,8 +36,8 @@ namespace Booking.DAL.Repositories.MongoDB
 
             var startCity = await _cityRepository.GetById(entity.StartCityId);
             var endCity = await _cityRepository.GetById(entity.EndCityId);
-            var startCountry = await _countryRepository.GetById(entity.PlaneId);
-            var endCountry = await _countryRepository.GetById(entity.PlaneId);
+            var startCountry = await _countryRepository.GetById(startCity.CountryId);
+            var endCountry = await _countryRepository.GetById(endCity.CountryId);
             var document = new BsonDocument
             {
                 { "_id", entity.Id },
@@ -136,8 +136,8 @@ namespace Booking.DAL.Repositories.MongoDB
             var plane = await _planeRepository.GetById(entity.PlaneId);
             var startCity = await _cityRepository.GetById(entity.StartCityId);
             var endCity = await _cityRepository.GetById(entity.EndCityId);
-            var startCountry = await _countryRepository.GetById(entity.PlaneId);
-            var endCountry = await _countryRepository.GetById(entity.PlaneId);
+            var startCountry = await _countryRepository.GetById(startCity.CountryId);
+            var endCountry = await _countryRepository.GetById(endCity.CountryId);
 
             var filter = Builders<BsonDocument>.Filter.Eq("_id", entity.Id);
 
@@ -155,6 +155,7 @@ namespace Booking.DAL.Repositories.MongoDB
             var update12 = Builders<BsonDocument>.Update.Set("Price", entity.Price);
             var update13 = Builders<BsonDocument>.Update.Set("StartDate", entity.StartDate);
             var update14 = Builders<BsonDocument>.Update.Set("EndDate", entity.EndDate);
+
             var updates = new UpdateDefinition<BsonDocument>[] { update , update2, update3, update4, update5, update6,
             update7,update8,update9,update10,update11,update12,update13,update14};
 
