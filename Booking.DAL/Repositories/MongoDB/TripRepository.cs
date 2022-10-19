@@ -4,6 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using Booking.DAL.Interfaces;
 using Booking.Domain.Models;
+using Booking.Domain.ViewModels.Trip;
 
 namespace Booking.DAL.Repositories.MongoDB
 {
@@ -48,7 +49,7 @@ namespace Booking.DAL.Repositories.MongoDB
                 {"StartCountryId",startCity.CountryId},
                 {"StartCountryName",startCountry.Name},
                 {"EndCityId",entity.EndCityId},
-                {"EndtCityName",endCity.Name},
+                {"EndCityName",endCity.Name},
                 {"EndCountryId",endCity.CountryId},
                 {"EndCountryName",endCountry.Name},
                 {"Capacity",entity.Capacity},
@@ -131,6 +132,58 @@ namespace Booking.DAL.Repositories.MongoDB
             return trip;
         }
 
+        public async Task<List<UserTripViewModel>> GetTripsByUserId(int id)
+        {
+            var pipeline = new BsonDocument
+            {
+                {"$unwind", "$Details"}
+            };
+
+            var pipeline2 = new BsonDocument
+            {
+                {"$match", new BsonDocument{
+                    {"Details.UserId", id }
+                }}
+            };
+
+            var pipeline3 = new BsonDocument
+            {
+                { "$project", new BsonDocument
+                    {
+                    { "_id", "$_id"},
+                    { "StartCityName", "$StartCityName"},
+                    { "StartCountryName", "$StartCountryName"},
+                    { "EndCityName", "$EndCityName"},
+                    { "EndCountryName", "$EndCountryName"},
+                    { "Place", "$Details.Place"},
+                    { "StartDate", "$StartDate"},
+                    { "EndDate", "$EndDate"}
+                } }
+            };
+            BsonDocument[] pipelines = new BsonDocument[] { pipeline, pipeline2, pipeline3 };
+            List<BsonDocument> results = await _mongoCollection.Aggregate<BsonDocument>(pipelines).ToListAsync();
+
+            List<UserTripViewModel> userTripViewModel = new();
+
+            foreach (var item in results)
+            {
+                userTripViewModel.Add(
+                    new UserTripViewModel()
+                    {
+                        TripId = item.GetValue("_id").ToInt32(),
+                        Place = item.GetValue("Place").ToInt32(),
+                        StartCity = item.GetValue("StartCityName").ToString(),
+                        StartCountry = item.GetValue("StartCountryName").ToString(),
+                        EndCity = item.GetValue("EndCityName").ToString(),
+                        EndCountry = item.GetValue("EndCountryName").ToString(),
+                        StartDate = item.GetValue("StartDate").ToLocalTime(),
+                        EndDate = item.GetValue("EndDate").ToLocalTime(),
+                    });
+            }
+
+            return userTripViewModel.Count > 0 ? userTripViewModel : null;
+        }
+
         public async Task<bool> Update(Trip entity)
         {
             var plane = await _planeRepository.GetById(entity.PlaneId);
@@ -148,7 +201,7 @@ namespace Booking.DAL.Repositories.MongoDB
             var update5 = Builders<BsonDocument>.Update.Set("StartCountryId", startCity.CountryId);
             var update6 = Builders<BsonDocument>.Update.Set("StartCountryName", startCountry.Name);
             var update7 = Builders<BsonDocument>.Update.Set("EndCityId", entity.EndCityId);
-            var update8 = Builders<BsonDocument>.Update.Set("EndtCityName", endCity.Name);
+            var update8 = Builders<BsonDocument>.Update.Set("EndCityName", endCity.Name);
             var update9 = Builders<BsonDocument>.Update.Set("EndCountryId", endCity.CountryId);
             var update10 = Builders<BsonDocument>.Update.Set("EndCountryName", endCountry.Name);
             var update11 = Builders<BsonDocument>.Update.Set("Capacity", entity.Capacity);
