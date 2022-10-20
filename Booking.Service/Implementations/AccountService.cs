@@ -16,10 +16,12 @@ namespace Booking.Service.Implementations
     public class AccountService : IAccountService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
 
-        public AccountService(IUserRepository userRepository)
+        public AccountService(IUserRepository userRepository, IUserRoleRepository userRoleRepository)
         {
             _userRepository = userRepository;
+            _userRoleRepository = userRoleRepository;
         }
 
         public async Task<BaseResponse<bool>> ChangePassword(ChangePasswordViewModel model)
@@ -156,6 +158,14 @@ namespace Booking.Service.Implementations
                 };
 
                 await _userRepository.Create(newUser);
+
+                var foundUser = await _userRepository.GetByUserName(newUser.UserName);
+
+                await _userRoleRepository.Create(new UserRole()
+                {
+                    UserId = foundUser.Id,
+                    RoleId = 1
+                });
 
                 return new BaseResponse<bool>()
                 {
