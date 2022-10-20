@@ -127,16 +127,16 @@ namespace Booking.DAL.Repositories.MongoDB
                     new TripInfo()
                     {
                         TripId = item.GetValue("_id").ToInt32(),
+                        AllTictets = item.GetValue("Capacity").ToInt32(),
                         StartCity = item.GetValue("StartCityName").ToString(),
                         StartCountry = item.GetValue("StartCountryName").ToString(),
                         EndCity = item.GetValue("EndCityName").ToString(),
                         EndCountry = item.GetValue("EndCountryName").ToString(),
                         StartDate = item.GetValue("StartDate").ToLocalTime(),
                         EndDate = item.GetValue("EndDate").ToLocalTime(),
-                        CountTickets = count,
+                        NumberOfOrderedTickets = count,
                         Profit = price * count
-                    }); ;
-
+                    });
             }
 
             return tripInfos.Count > 0 ? tripInfos : null;
@@ -183,6 +183,7 @@ namespace Booking.DAL.Repositories.MongoDB
                                     { "$size", "$Details" } }},
                                 { "else", 0 }
                                     }}}},
+                    {"Capacity","$Capacity" },
                     { "Price","$Price"},
                     { "StartDate", "$StartDate"},
                     { "EndDate", "$EndDate"}
@@ -215,7 +216,7 @@ namespace Booking.DAL.Repositories.MongoDB
             BsonDocument[] pipelines = new BsonDocument[] { pipeline, pipeline2 };
             List<BsonDocument> results = await _mongoCollection.Aggregate<BsonDocument>(pipelines).ToListAsync();
 
-            return GetDataTripInfo(results).First();
+            return GetDataTripInfo(results)?.First();
         }
 
         public async Task<List<TripInfo>> GetInformationByDate(int countDays)

@@ -123,9 +123,9 @@ namespace Booking.DAL.Repositories.MongoDB
             return true;
         }
 
-        public async Task<bool> UpdateTheReason(int userId, string reason)
+        public async Task<bool> UpdateTheReason(int id, string reason)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("_id", userId);
+            var filter = Builders<BsonDocument>.Filter.Eq("_id", id);
 
             var update = Builders<BsonDocument>.Update.Set("Reason", reason);
 
