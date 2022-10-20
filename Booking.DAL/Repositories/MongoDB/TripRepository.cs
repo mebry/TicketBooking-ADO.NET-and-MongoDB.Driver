@@ -131,59 +131,7 @@ namespace Booking.DAL.Repositories.MongoDB
             }
             return trip;
         }
-
-        public async Task<List<UserTripViewModel>> GetTripsByUserId(int id)
-        {
-            var pipeline = new BsonDocument
-            {
-                {"$unwind", "$Details"}
-            };
-
-            var pipeline2 = new BsonDocument
-            {
-                {"$match", new BsonDocument{
-                    {"Details.UserId", id }
-                }}
-            };
-
-            var pipeline3 = new BsonDocument
-            {
-                { "$project", new BsonDocument
-                    {
-                    { "_id", "$_id"},
-                    { "StartCityName", "$StartCityName"},
-                    { "StartCountryName", "$StartCountryName"},
-                    { "EndCityName", "$EndCityName"},
-                    { "EndCountryName", "$EndCountryName"},
-                    { "Place", "$Details.Place"},
-                    { "StartDate", "$StartDate"},
-                    { "EndDate", "$EndDate"}
-                } }
-            };
-            BsonDocument[] pipelines = new BsonDocument[] { pipeline, pipeline2, pipeline3 };
-            List<BsonDocument> results = await _mongoCollection.Aggregate<BsonDocument>(pipelines).ToListAsync();
-
-            List<UserTripViewModel> userTripViewModel = new();
-
-            foreach (var item in results)
-            {
-                userTripViewModel.Add(
-                    new UserTripViewModel()
-                    {
-                        TripId = item.GetValue("_id").ToInt32(),
-                        Place = item.GetValue("Place").ToInt32(),
-                        StartCity = item.GetValue("StartCityName").ToString(),
-                        StartCountry = item.GetValue("StartCountryName").ToString(),
-                        EndCity = item.GetValue("EndCityName").ToString(),
-                        EndCountry = item.GetValue("EndCountryName").ToString(),
-                        StartDate = item.GetValue("StartDate").ToLocalTime(),
-                        EndDate = item.GetValue("EndDate").ToLocalTime(),
-                    });
-            }
-
-            return userTripViewModel.Count > 0 ? userTripViewModel : null;
-        }
-
+        
         public async Task<bool> Update(Trip entity)
         {
             var plane = await _planeRepository.GetById(entity.PlaneId);
@@ -219,5 +167,7 @@ namespace Booking.DAL.Repositories.MongoDB
 
             return true;
         }
+
+        
     }
 }
