@@ -6,6 +6,6 @@ namespace Booking.Service.Interfaces
 {
     public interface ITripTreatmentService
     {
-        BaseResponse<List<int>> GetAvailablePlaces(List<TripDetails> tripDetails);
+        BaseResponse<List<int>> GetAvailablePlaces(List<TripDetails> tripDetails,int capacity);
     }
 }
