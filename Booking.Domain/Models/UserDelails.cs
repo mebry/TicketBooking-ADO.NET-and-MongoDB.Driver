@@ -15,5 +15,7 @@ namespace Booking.Domain.Models
         public string LastName { get; set; }
 
         public string Patronymic { get; set; }
+        
+        public int YearOfBirth { get; set; }
     }
 }
