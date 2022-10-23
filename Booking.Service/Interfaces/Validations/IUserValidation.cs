@@ -10,7 +10,6 @@ namespace Booking.Service.Interfaces.Calculations
     public interface IUserValidation
     {
         BaseResponse<bool> IsValidAge(int yearOfBirth);
-        BaseResponse<bool> IsPasswordsMatch(string password,string comfirmPassword);
         BaseResponse<bool> IsValidUserInfo(string data);
     }
 }
