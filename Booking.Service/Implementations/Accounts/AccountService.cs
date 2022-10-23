@@ -135,6 +135,16 @@ namespace Booking.Service.Implementations.Accounts
                     };
                 }
 
+                if (model.Password != model.PasswordConfirm)
+                {
+                    return new BaseResponse<bool>()
+                    {
+                        Data = false,
+                        StatusCode = StatusCode.IncorrectPassword,
+                        Description = "Passwords don't match",
+                    };
+                }
+
                 var newUser = new User()
                 {
                     UserName = model.UserName,
