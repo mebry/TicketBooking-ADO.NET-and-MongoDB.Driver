@@ -17,6 +17,8 @@ namespace Booking.Domain.Enums
         TripNotFound,
         CityNotFound,
         CountryNotFound,
+        AgeIsNotValid,
+        DataIsNotValid,
         OK = 200,
         DataAlreadyExists=300,
         InternalServerError = 500,
