@@ -5,11 +5,11 @@ using Booking.Domain.Models;
 
 namespace Booking.DAL.Repositories.MongoDB
 {
-    public class UserDelailsRepository : IUserDetailsRepository
+    public class UserDetailsRepository : IUserDetailsRepository
     {
         private readonly IMongoCollection<BsonDocument> _mongoCollection;
 
-        public UserDelailsRepository(string connectionStrings)
+        public UserDetailsRepository(string connectionStrings)
         {
             if (connectionStrings == null)
             {
@@ -35,10 +35,12 @@ namespace Booking.DAL.Repositories.MongoDB
             var update = Builders<BsonDocument>.Update.Unset("FirstName");
             var update2 = Builders<BsonDocument>.Update.Unset("LastName");
             var update3 = Builders<BsonDocument>.Update.Unset("Patronymic");
+            var update4 = Builders<BsonDocument>.Update.Unset("YearOfBirth");
 
             await _mongoCollection.UpdateOneAsync(filter, update);
             await _mongoCollection.UpdateOneAsync(filter, update2);
             await _mongoCollection.UpdateOneAsync(filter, update3);
+            await _mongoCollection.UpdateOneAsync(filter, update4);
 
             return true;
         }
@@ -61,6 +63,7 @@ namespace Booking.DAL.Repositories.MongoDB
                             FirstName = item.GetValue("FirstName").ToString(),
                             LastName = item.GetValue("LastName").ToString(),
                             Patronymic = item.GetValue("Patronymic").ToString(),
+                            YearOfBirth = item.GetValue("YearOfBirth").ToInt32(),
                         });
                     }
                 }
@@ -85,21 +88,11 @@ namespace Booking.DAL.Repositories.MongoDB
                     var elements = cursor.Current.ToList();
 
                     var item = elements[0];
-                    foreach (var data in item)
-                    {
-                        if(data.Name == "FirstName")
-                        {
-                            user.FirstName = data.Value.ToString();
-                        }
-                        if (data.Name == "LastName")
-                        {
-                            user.LastName = data.Value.ToString();
-                        }
-                        if (data.Name == "Patronymic")
-                        {
-                            user.Patronymic = data.Value.ToString();
-                        }
-                    }
+                    user.UserId = item.GetValue("_id").ToInt32();
+                    user.FirstName = item.GetValue("FirstName").ToString();
+                    user.LastName = item.GetValue("LastName").ToString();
+                    user.Patronymic = item.GetValue("Patronymic").ToString();
+                    user.YearOfBirth = item.GetValue("YearOfBirth").ToInt32();
                 }
             }
             return user;
@@ -126,6 +119,7 @@ namespace Booking.DAL.Repositories.MongoDB
                     user.FirstName = item.GetValue("FirstName").ToString();
                     user.LastName = item.GetValue("LastName").ToString();
                     user.Patronymic = item.GetValue("Patronymic").ToString();
+                    user.YearOfBirth = item.GetValue("YearOfBirth").ToInt32();
 
                 }
             }
@@ -172,10 +166,12 @@ namespace Booking.DAL.Repositories.MongoDB
             var update = Builders<BsonDocument>.Update.Set("FirstName", entity.FirstName);
             var update2 = Builders<BsonDocument>.Update.Set("LastName", entity.LastName);
             var update3 = Builders<BsonDocument>.Update.Set("Patronymic", entity.Patronymic);
+            var update4 = Builders<BsonDocument>.Update.Set("YearOfBirth", entity.YearOfBirth);
 
             await _mongoCollection.UpdateOneAsync(filter, update);
             await _mongoCollection.UpdateOneAsync(filter, update2);
             await _mongoCollection.UpdateOneAsync(filter, update3);
+            await _mongoCollection.UpdateOneAsync(filter, update4);
         }
 
     }
