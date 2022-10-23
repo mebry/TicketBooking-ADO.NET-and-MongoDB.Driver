@@ -2,42 +2,41 @@
 using Booking.Domain.Enums;
 using Booking.Domain.Models;
 using Booking.Domain.Responses;
-using Booking.Service.Interfaces;
+using Booking.Service.Interfaces.Repositories;
 
-namespace Booking.Service.Implementations
+namespace Booking.Service.Implementations.Repositories
 {
-    public class RoleService : IRoleService
+    public class CityService : ICityService
     {
-        private readonly IRoleRepository _roleRepository;
+        private readonly ICityRepository _cityRepository;
 
-        public RoleService(IRoleRepository roleRepository)
+        public CityService(ICityRepository cityRepository)
         {
-            _roleRepository = roleRepository;
+            _cityRepository = cityRepository;
         }
 
-        public async Task<BaseResponse<bool>> Create(Role model)
+        public async Task<BaseResponse<bool>> Create(City model)
         {
             try
             {
+                var city = await _cityRepository.GetByName(model.Name);
 
-                var role = await _roleRepository.GetByName(model.Name);
-
-                if (role != null)
+                if (city != null)
                 {
                     return new BaseResponse<bool>()
                     {
                         Data = false,
                         StatusCode = StatusCode.DataAlreadyExists,
-                        Description = "A role with this name already exists"
+                        Description = "A city with this name already exists"
                     };
                 }
 
-                await _roleRepository.Create(model);
+                await _cityRepository.Create(model);
 
                 return new BaseResponse<bool>()
                 {
                     Data = true,
-                    Description = "The role was successfully added.",
+                    Description = "The city was successfully added.",
                     StatusCode = StatusCode.OK
                 };
             }
@@ -56,24 +55,24 @@ namespace Booking.Service.Implementations
         {
             try
             {
-                var role = await _roleRepository.GetById(id);
+                var city = await _cityRepository.GetById(id);
 
-                if (role == null)
+                if (city == null)
                 {
                     return new BaseResponse<bool>()
                     {
                         Data = false,
-                        StatusCode = StatusCode.RoleNotFound,
-                        Description = "A role with this id doesn't exist"
+                        StatusCode = StatusCode.CityNotFound,
+                        Description = "A city with this id doesn't exist"
                     };
                 }
 
-                await _roleRepository.Delete(id);
+                await _cityRepository.Delete(id);
 
                 return new BaseResponse<bool>()
                 {
                     Data = true,
-                    Description = "The role was successfully removed",
+                    Description = "The city was successfully removed",
                     StatusCode = StatusCode.OK
                 };
             }
@@ -88,22 +87,22 @@ namespace Booking.Service.Implementations
             }
         }
 
-        public async Task<BaseResponse<List<Role>>> GetAll()
+        public async Task<BaseResponse<List<City>>> GetAll()
         {
             try
             {
-                var roles = await _roleRepository.GetAll();
+                var cities = await _cityRepository.GetAll();
 
-                return new BaseResponse<List<Role>>()
+                return new BaseResponse<List<City>>()
                 {
-                    Data = roles,
+                    Data = cities,
                     Description = "Data received successfully.",
                     StatusCode = StatusCode.OK
                 };
             }
             catch (Exception ex)
             {
-                return new BaseResponse<List<Role>>()
+                return new BaseResponse<List<City>>()
                 {
                     Data = null,
                     Description = ex.Message,
@@ -112,31 +111,31 @@ namespace Booking.Service.Implementations
             }
         }
 
-        public async Task<BaseResponse<Role>> GetById(int id)
+        public async Task<BaseResponse<City>> GetByCityName(string name)
         {
             try
             {
-                var role = await _roleRepository.GetById(id);
-                if (role == null)
+                var city = await _cityRepository.GetByName(name);
+                if (city == null)
                 {
-                    return new BaseResponse<Role>()
+                    return new BaseResponse<City>()
                     {
                         Data = null,
-                        StatusCode = StatusCode.RoleNotFound,
-                        Description = "A role with this id doesn't exist"
+                        StatusCode = StatusCode.CityNotFound,
+                        Description = "A city with this id doesn't exist"
                     };
                 }
 
-                return new BaseResponse<Role>()
+                return new BaseResponse<City>()
                 {
-                    Data = role,
-                    Description = "The role was successfully found.",
+                    Data = city,
+                    Description = "The city was successfully found.",
                     StatusCode = StatusCode.OK
                 };
             }
             catch (Exception ex)
             {
-                return new BaseResponse<Role>()
+                return new BaseResponse<City>()
                 {
                     Data = null,
                     Description = ex.Message,
@@ -145,31 +144,31 @@ namespace Booking.Service.Implementations
             }
         }
 
-        public async Task<BaseResponse<Role>> GetByName(string name)
+        public async Task<BaseResponse<City>> GetById(int id)
         {
             try
             {
-                var role = await _roleRepository.GetByName(name);
-                if (role == null)
+                var city = await _cityRepository.GetById(id);
+                if (city == null)
                 {
-                    return new BaseResponse<Role>()
+                    return new BaseResponse<City>()
                     {
                         Data = null,
-                        StatusCode = StatusCode.RoleNotFound,
-                        Description = "A role with this id doesn't exist"
+                        StatusCode = StatusCode.CityNotFound,
+                        Description = "A city with this id doesn't exist"
                     };
                 }
 
-                return new BaseResponse<Role>()
+                return new BaseResponse<City>()
                 {
-                    Data = role,
-                    Description = "The role was successfully found.",
+                    Data = city,
+                    Description = "The city was successfully found.",
                     StatusCode = StatusCode.OK
                 };
             }
             catch (Exception ex)
             {
-                return new BaseResponse<Role>()
+                return new BaseResponse<City>()
                 {
                     Data = null,
                     Description = ex.Message,
@@ -178,28 +177,28 @@ namespace Booking.Service.Implementations
             }
         }
 
-        public async Task<BaseResponse<bool>> Update(Role model)
+        public async Task<BaseResponse<bool>> Update(City model)
         {
             try
             {
-                var data = _roleRepository.GetById(model.Id);
+                var data = _cityRepository.GetById(model.Id);
 
                 if (data == null)
                 {
                     return new BaseResponse<bool>()
                     {
                         Data = false,
-                        StatusCode = StatusCode.RoleNotFound,
-                        Description = "A role with this id doesn't exist"
+                        StatusCode = StatusCode.CityNotFound,
+                        Description = "A city with this id doesn't exist"
                     };
                 }
 
-                await _roleRepository.Update(model);
+                await _cityRepository.Update(model);
 
                 return new BaseResponse<bool>()
                 {
                     Data = true,
-                    Description = "The role information was successfully updates.",
+                    Description = "The city information was successfully updates.",
                     StatusCode = StatusCode.OK
                 };
             }

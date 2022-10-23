@@ -2,9 +2,9 @@
 using Booking.Domain.Enums;
 using Booking.Domain.Models;
 using Booking.Domain.Responses;
-using Booking.Service.Interfaces;
+using Booking.Service.Interfaces.Calculations;
 
-namespace Booking.Service.Implementations
+namespace Booking.Service.Implementations.Calculations
 {
     public class TripTreatmentService: ITripTreatmentService
     {

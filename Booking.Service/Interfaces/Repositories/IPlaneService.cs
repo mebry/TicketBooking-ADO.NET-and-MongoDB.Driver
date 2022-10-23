@@ -1,7 +1,7 @@
 ﻿using Booking.Domain.Models;
 using Booking.Domain.Responses;
 
-namespace Booking.Service.Interfaces
+namespace Booking.Service.Interfaces.Repositories
 {
     public interface IPlaneService:IBaseService<Plane>
     {

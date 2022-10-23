@@ -3,14 +3,14 @@ using Booking.Domain.Enums;
 using Booking.Domain.Helpers;
 using Booking.Domain.Models;
 using Booking.Domain.Responses;
-using Booking.Service.Interfaces;
+using Booking.Service.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Booking.Service.Implementations
+namespace Booking.Service.Implementations.Repositories
 {
     public class UserService : IUserService
     {

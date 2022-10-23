@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Booking.Service.Interfaces
+namespace Booking.Service.Interfaces.Calculations
 {
     public interface IUserValidation
     {

@@ -4,14 +4,9 @@ using Booking.Domain.Helpers;
 using Booking.Domain.Models;
 using Booking.Domain.Responses;
 using Booking.Domain.ViewModels.Account;
-using Booking.Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Booking.Service.Interfaces.Accounts;
 
-namespace Booking.Service.Implementations
+namespace Booking.Service.Implementations.Accounts
 {
     public class AccountService : IAccountService
     {
@@ -137,16 +132,6 @@ namespace Booking.Service.Implementations
                         Data = false,
                         StatusCode = StatusCode.UserAlreadyExists,
                         Description = "A user with this username already exists",
-                    };
-                }
-
-                if (model.Password != model.PasswordConfirm)
-                {
-                    return new BaseResponse<bool>()
-                    {
-                        Data = false,
-                        StatusCode = StatusCode.IncorrectPassword,
-                        Description = "Passwords don't match",
                     };
                 }
 
