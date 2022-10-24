@@ -9,7 +9,8 @@ namespace Booking.Service.Implementations.Validations
     {
         public BaseResponse<bool> IsValidAge(int yearOfBirth)
         {
-            if (yearOfBirth >= 12)
+            int age = DateTime.Now.Year - yearOfBirth;
+            if (age >= 12 && age <= 120)
             {
                 return new BaseResponse<bool>()
                 {
@@ -29,7 +30,8 @@ namespace Booking.Service.Implementations.Validations
 
         public BaseResponse<bool> IsValidUserInfo(string data)
         {
-            if(!string.IsNullOrEmpty(data) && !Regex.IsMatch(data, @"[^\w\.@!?()%$+=#%&*~1234567890<>]"))
+            string pattern = @".,@!?()_%$+=#%&*~1234567890<>";
+            if (!string.IsNullOrEmpty(data) && data.Length > 1 && !data.Any(c => pattern.Contains(c)))
             {
                 return new BaseResponse<bool>()
                 {
