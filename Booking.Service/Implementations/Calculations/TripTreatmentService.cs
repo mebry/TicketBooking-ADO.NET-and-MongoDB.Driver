@@ -12,6 +12,16 @@ namespace Booking.Service.Implementations.Calculations
 
         public BaseResponse<List<int>> GetAvailablePlaces(List<TripDetails> tripDetail,int capacity)
         {
+            if(tripDetail == null)
+            {
+                return new BaseResponse<List<int>>()
+                {
+                    Data = null,
+                    StatusCode = StatusCode.TripDetailsNotFound,
+                    Description = "Places were found"
+                };
+            }
+
             List<int> bookedPlaces = new List<int>();
             List<int> availablePlaces = new List<int>();
             foreach (var item in tripDetail)
