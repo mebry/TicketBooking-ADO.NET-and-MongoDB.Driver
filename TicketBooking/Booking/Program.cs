@@ -7,6 +7,10 @@ using Booking.DAL.Interfaces;
 using Booking.Domain.Models;
 using Booking.Domain.Helpers;
 using Booking.DAL.Repositories.MsServer;
+using Booking.Service.Interfaces.Repositories;
+using Booking.Service.Implementations.Repositories;
+using Booking.Service.Interfaces.Accounts;
+using Booking.Service.Implementations.Accounts;
 
 namespace Booking
 {
@@ -115,10 +119,12 @@ namespace Booking
             //await CreateCity(new CityRepositoryMS(_connetionString),2, "Voronez");
             //await AddTrip(new TripRepositoryMS(_connetionString));
             //await DeleteTripById(new TripRepositoryMS(_connetionString),6);
-            await AddTripDetails(new TripDetailRepositoryMS(_connetionString));
+            //await AddTripDetails(new TripDetailRepositoryMS(_connetionString));
+            //await GetInformationByTrip(new TripInformationRepositoryMS(_connetionString),10);
             //await GetTripInfoByUserId(new TripInformationRepositoryMS(_connetionString),3);
             //await GetTripInfoByUserId(new TripInformationRepository(path),3);
             //await AddNewUser(new UserRepositoryMS(_connetionString), new UserRoleRepositoryMS(_connetionString));
+            await GetInformationByTripsInside(new TripInformationRepositoryMS(_connetionString));
         }
 
         public static async Task DeleteTripById(ITripRepository trip, int id)
@@ -187,7 +193,8 @@ namespace Booking
 
         public static async Task GetInformationByTripsInside(ITripInformationRepository tripRepository)
         {
-            var data = await tripRepository.GetInformationByTripsInside();
+            ITripInformationService tripInformationService = new TripInformationService(tripRepository,null,null);
+            var data = await tripInformationService.GetInformationByTripsInside();
 
             Console.WriteLine();
         }
@@ -235,12 +242,12 @@ namespace Booking
             await tripRepository.Create(new Trip()
             {
                 PlaneId = 3,
-                StartCityId = 2,
-                EndCityId = 1,
-                StartDate = new DateTime(2022, 12, 20, 9, 00, 00),
-                EndDate = new DateTime(2022, 12, 20, 11, 30, 00),
+                StartCityId = 1,
+                EndCityId = 5,
+                StartDate = new DateTime(2022, 11, 20, 9, 00, 00),
+                EndDate = new DateTime(2022, 11, 20, 11, 30, 00),
                 Capacity = 130,
-                Price = 30
+                Price = 40
             });
         }
 
@@ -249,9 +256,9 @@ namespace Booking
             await tripDetailRepository.Create(
                 new TripDetails()
                 {
-                    TripId = 5,
-                    UserId = 4,
-                    Place = 5
+                    TripId = 7,
+                    UserId = 3,
+                    Place = 1
                 });
         }
 
