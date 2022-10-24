@@ -22,8 +22,19 @@ namespace Booking.Service.Implementations.Calculations
                 };
             }
 
+            if(capacity <= 0)
+            {
+                return new BaseResponse<List<int>>()
+                {
+                    Data = null,
+                    StatusCode = StatusCode.IncorrectCapacity,
+                    Description = "Incorrect capacity"
+                };
+            }
+
             List<int> bookedPlaces = new List<int>();
             List<int> availablePlaces = new List<int>();
+
             foreach (var item in tripDetail)
             {
                 bookedPlaces.Add(item.Place);
