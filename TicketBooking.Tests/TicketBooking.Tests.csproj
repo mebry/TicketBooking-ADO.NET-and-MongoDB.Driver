@@ -27,4 +27,8 @@
     <ProjectReference Include="..\Booking.Service\Booking.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Integrated\" />
+  </ItemGroup>
+
 </Project>
