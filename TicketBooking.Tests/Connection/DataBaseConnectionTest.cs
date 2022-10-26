@@ -31,7 +31,7 @@ namespace TicketBooking.Tests.Connection
         }
 
         [Fact]
-        public async Task TestMSServer_WithTheCorrectPath_IsEqual()
+        public async Task TestMSServer_WithTheCorrectPath_True()
         {
             // Arrange
             string connectionString = @"Data Source=DESKTOP-SEHI244;Initial Catalog=TicketBooking;Integrated Security=True";
@@ -41,10 +41,16 @@ namespace TicketBooking.Tests.Connection
             IPlaneService planeService = new PlaneService(planeRepository);
 
             // Act
-            var result = await planeService.GetById(planeId);
+            DateTime startTime = DateTime.Now;
+            await planeService.GetById(planeId);
+
+            if (DateTime.Now.Subtract(startTime) >= new TimeSpan(0, 0, 0, 0, 10000))
+            {
+                Assert.True(false);
+            }
 
             // Assert
-            Assert.Equal(StatusCode.PlaneNotFound, result.StatusCode);
+            Assert.True(true);
         }
 
         [Fact]
@@ -69,7 +75,7 @@ namespace TicketBooking.Tests.Connection
         }
 
         [Fact]
-        public async Task TestMongoDB_WithTheCorrectPath_IsEqual()
+        public async Task TestMongoDB_WithTheCorrectPath_True()
         {
             // Arrange
             string connectionString = "mongodb://localhost:27017";
@@ -79,10 +85,14 @@ namespace TicketBooking.Tests.Connection
             IPlaneService planeService = new PlaneService(planeRepository);
 
             // Act
+            DateTime startTime = DateTime.Now;
             var result = await planeService.GetById(planeId);
-
+            if (DateTime.Now.Subtract(startTime) >= new TimeSpan(0, 0, 0, 0, 10000))
+            {
+                Assert.True(false);
+            }
             // Assert
-            Assert.Equal(StatusCode.PlaneNotFound, result.StatusCode);
+            Assert.True(true);
         }
     }
 }
