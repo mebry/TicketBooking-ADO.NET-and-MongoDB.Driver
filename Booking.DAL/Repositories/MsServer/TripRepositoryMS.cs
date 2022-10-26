@@ -61,7 +61,7 @@ namespace Booking.DAL.Repositories.MsServer
 
         public async Task<List<Trip>> GetAll()
         {
-            string sql = $"select IdPlaneId,StartCityId,EndCityId,StartDate,EndDate,Price,Capacity from Trips";
+            string sql = $"select Id,PlaneId,StartCityId,EndCityId,StartDate,EndDate,Price,Capacity from Trips";
 
             using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
@@ -82,8 +82,8 @@ namespace Booking.DAL.Repositories.MsServer
                                 Price = (int)sqlDataReader["Price"],
                                 StartCityId = (int)sqlDataReader["StartCityId"],
                                 EndCityId = (int)sqlDataReader["EndCityId"],
-                                StartDate    = (DateTime)sqlDataReader["StartDate"],
-                                EndDate    = (DateTime)sqlDataReader["EndDate"]
+                                StartDate = (DateTime)sqlDataReader["StartDate"],
+                                EndDate = (DateTime)sqlDataReader["EndDate"]
                             });
                         }
                         if (trips.Count > 0)
@@ -101,7 +101,7 @@ namespace Booking.DAL.Repositories.MsServer
 
         public async Task<Trip> GetById(int id)
         {
-            string sql = $"select Id,IdPlaneId,StartCityId,EndCityId,StartDate,EndDate,Price,Capacity from Trips where Id=@id";
+            string sql = $"select Id,PlaneId,StartCityId,EndCityId,StartDate,EndDate,Price,Capacity from Trips where Id=@id";
 
             using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
@@ -144,7 +144,7 @@ namespace Booking.DAL.Repositories.MsServer
 
         public async Task<bool> Update(Trip entity)
         {
-            string query = $"UPDATE Roles SET IdPlaneId=@IdPlaneId,StartCityId=@StartCityId," +
+            string query = $"UPDATE Roles SET PlaneId=@PlaneId,StartCityId=@StartCityId," +
                 $"EndCityId=@EndCityId,StartDate=@StartDate,EndDate=@EndDate," +
                 $"Price=@Price,Capacity=@Capacity WHERE Id=@id";
 
