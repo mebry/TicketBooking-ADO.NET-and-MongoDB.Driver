@@ -124,9 +124,18 @@ namespace Booking
             //await GetTripInfoByUserId(new TripInformationRepositoryMS(_connetionString),3);
             //await GetTripInfoByUserId(new TripInformationRepository(path),3);
             //await AddNewUser(new UserRepositoryMS(_connetionString), new UserRoleRepositoryMS(_connetionString));
-            await GetInformationByTripsInside(new TripInformationRepositoryMS(_connetionString));
+            //await GetInformationByTripsInside(new TripInformationRepositoryMS(_connetionString));
+            await CreateDeletedUser(new DeletedUserRepository(path), new DeletedUser()
+            {
+                DateTime = new DateTime(),
+                UserId = 3,
+                Reason = "test"
+            });
         }
-
+        public static async Task CreateDeletedUser(IDeletedUserRepository deletedUserRepository, DeletedUser deletedUser)
+        {
+            await deletedUserRepository.Create(deletedUser);
+        }
         public static async Task DeleteTripById(ITripRepository trip, int id)
         {
             await trip.Delete(id);
