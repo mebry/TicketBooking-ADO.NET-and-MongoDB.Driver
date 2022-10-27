@@ -50,6 +50,28 @@ namespace TicketBooking.Tests.Automatic
         }
 
         [Fact]
+        public void GetAvailablePlaces_IncorrcentAvailablePlaces_IsFalse()
+        {
+            // Arrange
+            ITripTreatmentService tripTreatmentService = new TripTreatmentService();
+            List<TripDetails> tripDetails = new List<TripDetails>()
+            {
+                new TripDetails(){Place=1},
+                new TripDetails(){Place=3},
+                new TripDetails(){Place=2},
+                new TripDetails(){Place=5},
+                new TripDetails(){Place=10},
+            };
+            int capacity = 10;
+            int available = 5;
+            // Act
+            var result = tripTreatmentService.GetAvailablePlaces(tripDetails, capacity);
+
+            // Assert
+            Assert.False(available+1 == result.Data.Count);
+        }
+
+        [Fact]
         public void GetAvailablePlaces_CorrentCount_IsTrue()
         {
             // Arrange
