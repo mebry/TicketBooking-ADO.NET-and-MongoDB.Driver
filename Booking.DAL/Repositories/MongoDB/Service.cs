@@ -11,15 +11,9 @@ namespace Booking.DAL.Repositories.MongoDB
     {
         public static int MaxIndex(IMongoCollection<BsonDocument> mongoClient)
         {
-            int maxValue = 0;
-
             var data = mongoClient.Find(new BsonDocument()).Sort("{_id:-1}").Limit(1).ToList();
-            foreach (var item in data)
-            {
-                maxValue = item.GetValue("_id").ToInt32();
-            }
 
-            return maxValue;
+            return data.Count > 0 ? data[0].GetValue("_id").ToInt32() : 0;
         }
     }
 
